@@ -763,16 +763,14 @@ body.modal-open { overflow:hidden; }
       </div>
     </div>
     <!-- Table header -->
-    <div style="display:grid;grid-template-columns:3fr 1fr 1fr;gap:6px;padding:6px 10px;background:#1a1a2e;border-radius:8px;margin-bottom:6px">
+    <div style="display:grid;grid-template-columns:1fr auto;gap:6px;padding:6px 10px;background:#1a1a2e;border-radius:8px;margin-bottom:6px">
       <div style="font-size:.7rem;color:#f0c040;font-weight:700">DESCRIPTION</div>
-      <div style="font-size:.7rem;color:#f0c040;font-weight:700;text-align:center">QTY</div>
-      <div style="font-size:.7rem;color:#f0c040;font-weight:700;text-align:right">PRICE</div>
+      <div style="font-size:.7rem;color:#f0c040;font-weight:700;text-align:right">AMOUNT (AED)</div>
     </div>
     <div id="qi-items">
-      <div class="qi-item" style="display:grid;grid-template-columns:3fr 1fr 1fr;gap:6px;margin-bottom:6px;align-items:center">
+      <div class="qi-item" style="display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:6px;align-items:center">
         <input class="form-input qi-desc" placeholder="Service description" style="margin:0;font-size:.82rem">
-        <input class="form-input qi-qty" placeholder="1" type="number" value="1" min="1" oninput="calcQiTotal()" style="margin:0;font-size:.82rem;text-align:center">
-        <input class="form-input qi-price" placeholder="0.00" type="number" oninput="calcQiTotal()" style="margin:0;font-size:.82rem;text-align:right">
+        <input class="form-input qi-price" placeholder="0.00" type="number" oninput="calcQiTotal()" style="margin:0;font-size:.82rem;text-align:right;width:110px">
       </div>
     </div>
     <button onclick="addQiItem()" style="width:100%;padding:8px;background:#f0f0f0;border:1px dashed #ccc;border-radius:8px;cursor:pointer;font-size:.82rem;margin-bottom:8px">+ Add Row</button>
@@ -828,10 +826,9 @@ body.modal-open { overflow:hidden; }
       <input class="form-input" id="eqi-date" type="date" style="max-width:200px">
     </div>
     <!-- Table header -->
-    <div style="display:grid;grid-template-columns:3fr 1fr 1fr auto;gap:6px;padding:6px 10px;background:#1a1a2e;border-radius:8px;margin-bottom:6px">
+    <div style="display:grid;grid-template-columns:1fr auto auto;gap:6px;padding:6px 10px;background:#1a1a2e;border-radius:8px;margin-bottom:6px">
       <div style="font-size:.7rem;color:#f0c040;font-weight:700">DESCRIPTION</div>
-      <div style="font-size:.7rem;color:#f0c040;font-weight:700;text-align:center">QTY</div>
-      <div style="font-size:.7rem;color:#f0c040;font-weight:700;text-align:right">PRICE</div>
+      <div style="font-size:.7rem;color:#f0c040;font-weight:700;text-align:right">AMOUNT (AED)</div>
       <div></div>
     </div>
     <div id="eqi-items"></div>
@@ -2231,10 +2228,9 @@ function openQuickInvoice() {
   document.getElementById('qi-phone').value = '';
   document.getElementById('qi-date').value = today();
   document.getElementById('qi-items').innerHTML = `
-    <div class="qi-item" style="display:grid;grid-template-columns:3fr 1fr 1fr;gap:6px;margin-bottom:6px;align-items:center">
+    <div class="qi-item" style="display:grid;grid-template-columns:1fr auto;gap:6px;margin-bottom:6px;align-items:center">
       <input class="form-input qi-desc" placeholder="Service description" style="margin:0;font-size:.82rem">
-      <input class="form-input qi-qty" placeholder="1" type="number" value="1" min="1" oninput="calcQiTotal()" style="margin:0;font-size:.82rem;text-align:center">
-      <input class="form-input qi-price" placeholder="0.00" type="number" oninput="calcQiTotal()" style="margin:0;font-size:.82rem;text-align:right">
+      <input class="form-input qi-price" placeholder="0.00" type="number" oninput="calcQiTotal()" style="margin:0;font-size:.82rem;text-align:right;width:110px">
     </div>`;
   const taxEl = document.getElementById('qi-tax');
   if(taxEl) taxEl.value = '0';
@@ -2249,11 +2245,10 @@ function openQuickInvoice() {
 function addQiItem() {
   const div = document.createElement('div');
   div.className = 'qi-item';
-  div.style = 'display:grid;grid-template-columns:3fr 1fr 1fr auto;gap:6px;margin-bottom:6px;align-items:center';
+  div.style = 'display:grid;grid-template-columns:1fr auto auto;gap:6px;margin-bottom:6px;align-items:center';
   div.innerHTML = `
     <input class="form-input qi-desc" placeholder="Service description" style="margin:0;font-size:.82rem">
-    <input class="form-input qi-qty" placeholder="1" type="number" value="1" min="1" oninput="calcQiTotal()" style="margin:0;font-size:.82rem;text-align:center">
-    <input class="form-input qi-price" placeholder="0.00" type="number" oninput="calcQiTotal()" style="margin:0;font-size:.82rem;text-align:right">
+    <input class="form-input qi-price" placeholder="0.00" type="number" oninput="calcQiTotal()" style="margin:0;font-size:.82rem;text-align:right;width:110px">
     <button onclick="this.parentElement.remove();calcQiTotal()" style="background:#fce8e6;border:none;color:#e53935;cursor:pointer;font-size:.9rem;border-radius:6px;padding:6px 8px">✕</button>`;
   document.getElementById('qi-items').appendChild(div);
 }
@@ -2262,9 +2257,8 @@ function calcQiTotal() {
   const items = [...document.querySelectorAll('.qi-item')];
   let subtotal = 0;
   items.forEach(item => {
-    const qty = parseFloat(item.querySelector('.qi-qty')?.value)||1;
     const price = parseFloat(item.querySelector('.qi-price')?.value)||0;
-    subtotal += qty * price;
+    subtotal += price;
   });
   const taxPct = parseFloat(document.getElementById('qi-tax')?.value)||0;
   const taxAmt = subtotal * taxPct / 100;
@@ -2295,9 +2289,9 @@ function saveAndPrintQI() {
   const taxPct = parseFloat(document.getElementById('qi-tax').value)||0;
   const items = [...document.querySelectorAll('.qi-item')].map(item=>({
     desc: item.querySelector('.qi-desc').value.trim() || 'Service',
-    qty: parseFloat(item.querySelector('.qi-qty')?.value)||1,
+    qty: 1,
     price: parseFloat(item.querySelector('.qi-price')?.value)||0,
-    amt: (parseFloat(item.querySelector('.qi-qty')?.value)||1) * (parseFloat(item.querySelector('.qi-price')?.value)||0)
+    amt: parseFloat(item.querySelector('.qi-price')?.value)||0
   })).filter(i=>i.price>0);
   if(!items.length){ alert('Please enter at least one service with price!'); return; }
   const subtotal = items.reduce((a,b)=>a+b.amt,0);
@@ -2444,10 +2438,9 @@ function editQI(id) {
   document.getElementById('eqi-date').value = q.date;
   document.getElementById('eqi-tax').value = q.taxPct||0;
   document.getElementById('eqi-items').innerHTML = q.items.map(item=>`
-    <div class="eqi-item" style="display:grid;grid-template-columns:3fr 1fr 1fr auto;gap:6px;margin-bottom:6px;align-items:center">
+    <div class="eqi-item" style="display:grid;grid-template-columns:1fr auto auto;gap:6px;margin-bottom:6px;align-items:center">
       <input class="form-input eqi-desc" value="${item.desc||''}" placeholder="Service description" style="margin:0;font-size:.82rem">
-      <input class="form-input eqi-qty" type="number" value="${item.qty||1}" min="1" oninput="calcEqiTotal()" style="margin:0;font-size:.82rem;text-align:center">
-      <input class="form-input eqi-price" type="number" value="${item.price||0}" oninput="calcEqiTotal()" style="margin:0;font-size:.82rem;text-align:right">
+      <input class="form-input eqi-price" type="number" value="${item.amt||item.price||0}" oninput="calcEqiTotal()" style="margin:0;font-size:.82rem;text-align:right;width:110px">
       <button onclick="this.parentElement.remove();calcEqiTotal()" style="background:#fce8e6;border:none;color:#e53935;cursor:pointer;font-size:.9rem;border-radius:6px;padding:6px 8px">✕</button>
     </div>`).join('');
   calcEqiTotal();
@@ -2461,11 +2454,10 @@ function editQI(id) {
 function addEqiItem() {
   const div = document.createElement('div');
   div.className = 'eqi-item';
-  div.style = 'display:grid;grid-template-columns:3fr 1fr 1fr auto;gap:6px;margin-bottom:6px;align-items:center';
+  div.style = 'display:grid;grid-template-columns:1fr auto auto;gap:6px;margin-bottom:6px;align-items:center';
   div.innerHTML = `
     <input class="form-input eqi-desc" placeholder="Service description" style="margin:0;font-size:.82rem">
-    <input class="form-input eqi-qty" type="number" value="1" min="1" oninput="calcEqiTotal()" style="margin:0;font-size:.82rem;text-align:center">
-    <input class="form-input eqi-price" type="number" placeholder="0.00" oninput="calcEqiTotal()" style="margin:0;font-size:.82rem;text-align:right">
+    <input class="form-input eqi-price" type="number" placeholder="0.00" oninput="calcEqiTotal()" style="margin:0;font-size:.82rem;text-align:right;width:110px">
     <button onclick="this.parentElement.remove();calcEqiTotal()" style="background:#fce8e6;border:none;color:#e53935;cursor:pointer;font-size:.9rem;border-radius:6px;padding:6px 8px">✕</button>`;
   document.getElementById('eqi-items').appendChild(div);
 }
@@ -2473,9 +2465,7 @@ function addEqiItem() {
 function calcEqiTotal() {
   let subtotal = 0;
   [...document.querySelectorAll('.eqi-item')].forEach(item => {
-    const qty = parseFloat(item.querySelector('.eqi-qty')?.value)||1;
-    const price = parseFloat(item.querySelector('.eqi-price')?.value)||0;
-    subtotal += qty * price;
+    subtotal += parseFloat(item.querySelector('.eqi-price')?.value)||0;
   });
   const taxPct = parseFloat(document.getElementById('eqi-tax')?.value)||0;
   const taxAmt = subtotal * taxPct / 100;
@@ -2506,11 +2496,11 @@ function saveEditQI() {
   if(!q) return;
   const items = [...document.querySelectorAll('.eqi-item')].map(item=>({
     desc: item.querySelector('.eqi-desc').value.trim()||'Service',
-    qty: parseFloat(item.querySelector('.eqi-qty')?.value)||1,
+    qty: 1,
     price: parseFloat(item.querySelector('.eqi-price')?.value)||0,
-    amt: (parseFloat(item.querySelector('.eqi-qty')?.value)||1)*(parseFloat(item.querySelector('.eqi-price')?.value)||0)
+    amt: parseFloat(item.querySelector('.eqi-price')?.value)||0
   })).filter(i=>i.price>0);
-  if(!items.length){ alert('Please enter at least one service with price!'); return; }
+  if(!items.length){ alert('Please enter at least one service with amount!'); return; }
   const subtotal = items.reduce((a,b)=>a+b.amt,0);
   const taxPct = parseFloat(document.getElementById('eqi-tax').value)||0;
   const taxAmt = subtotal * taxPct / 100;
@@ -2518,7 +2508,6 @@ function saveEditQI() {
   const paid = Math.min(parseFloat(document.getElementById('eqi-paid')?.value)||0, total);
   const balance = Math.max(0, total - paid);
   const status = balance<=0 ? 'paid' : (paid>0 ? 'partial' : 'unpaid');
-  // Update invoice
   q.name = document.getElementById('eqi-name').value.trim()||'Walk-in Customer';
   q.phone = document.getElementById('eqi-phone').value.trim();
   q.date = document.getElementById('eqi-date').value||today();
@@ -2561,10 +2550,10 @@ function buildQIHtml(q) {
     table{width:100%;border-collapse:collapse;margin-bottom:16px}
     thead tr{background:#1a6b3c}
     th{color:#fff;padding:10px 12px;font-size:.82rem;font-weight:700;text-align:left}
-    th:nth-child(3),th:nth-child(4),th:nth-child(5){text-align:right}
+    th:nth-child(2){text-align:right}
     td{padding:10px 12px;font-size:.88rem;border-bottom:1px solid #e8f5e9}
     tr:nth-child(even) td{background:#f5faf7}
-    td:nth-child(3),td:nth-child(4),td:nth-child(5){text-align:right}
+    td:nth-child(2){text-align:right}
     .totals{display:flex;justify-content:flex-end;margin-bottom:20px}
     .totals-box{width:300px}
     .totals-row{display:flex;justify-content:space-between;padding:6px 0;font-size:.88rem;border-bottom:1px solid #eee}
@@ -2596,9 +2585,9 @@ function buildQIHtml(q) {
       ${q.phone?`<div class="bill-to-phone">📞 ${q.phone}</div>`:''}
     </div>
     <table>
-      <thead><tr><th>#</th><th>Description</th><th>Price</th><th>Qty</th><th>Total</th></tr></thead>
+      <thead><tr><th>Description</th><th>Amount</th></tr></thead>
       <tbody>
-        ${q.items.map((it,i)=>`<tr><td>${i+1}</td><td>${it.desc}</td><td>AED ${(it.price??it.amt).toFixed(2)}</td><td>${it.qty??1}</td><td>AED ${it.amt.toFixed(2)}</td></tr>`).join('')}
+        ${q.items.map(it=>`<tr><td>${it.desc}</td><td>AED ${it.amt.toFixed(2)}</td></tr>`).join('')}
       </tbody>
     </table>
     <div class="totals">
