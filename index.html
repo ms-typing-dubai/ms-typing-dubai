@@ -576,7 +576,7 @@ body.modal-open { overflow:hidden; }
         <div id="billing-clients-list"></div>
       </div>
 
-      <div class="card" id="bills-list" style="display:none"></div>
+      <div class="card" id="bills-list" style="display:none;padding:0"></div>
 
       <!-- Quick Invoices Section -->
       <div id="quick-invoices-section" style="display:none">
@@ -2013,49 +2013,56 @@ function saveEditBill() {
 }
 function filterBills(v) { billSearchFilter=v; renderBills(); }
 function filterBillsTab(f) {
-  billTabFilter=f;
-  ['clients','all','service','payment','balance','quick'].forEach(x=>{
-    const btn=document.getElementById('bf-'+x);
-    if(!btn)return;
-    const isActive = x===f;
-    if(x==='quick') {
-      btn.style.background=isActive?'#b71c1c':'var(--surface)';
-      btn.style.color=isActive?'#fff':'#b71c1c';
-      btn.style.border=isActive?'none':'1px solid #b71c1c';
+  billTabFilter = f;
+
+  // Update button styles
+  ['clients','all','service','payment','balance','quick'].forEach(x => {
+    const btn = document.getElementById('bf-'+x);
+    if(!btn) return;
+    const isActive = x === f;
+    if(x === 'quick') {
+      btn.style.background = isActive ? '#b71c1c' : 'var(--surface)';
+      btn.style.color = isActive ? '#fff' : '#b71c1c';
+      btn.style.border = isActive ? 'none' : '1px solid #b71c1c';
     } else {
-      btn.style.background=isActive?'var(--gold)':'var(--surface)';
-      btn.style.color=isActive?'#fff':'var(--muted)';
-      btn.style.border=isActive?'none':'1px solid var(--border)';
+      btn.style.background = isActive ? 'var(--gold)' : 'var(--surface)';
+      btn.style.color = isActive ? '#fff' : 'var(--muted)';
+      btn.style.border = isActive ? 'none' : '1px solid var(--border)';
     }
-    btn.style.fontWeight=isActive?'700':'400';
+    btn.style.fontWeight = isActive ? '700' : '400';
   });
-  const billsList = document.getElementById('bills-list');
-  const qiSection = document.getElementById('quick-invoices-section');
-  const searchBar = document.getElementById('bills-search-bar');
+
+  // Get all sections
+  const billsList     = document.getElementById('bills-list');
+  const qiSection     = document.getElementById('quick-invoices-section');
+  const searchBar     = document.getElementById('bills-search-bar');
   const clientsSection = document.getElementById('billing-clients-section');
 
-  // Hide all first
-  if(billsList) billsList.style.display='none';
-  if(qiSection) qiSection.style.display='none';
-  if(searchBar) searchBar.style.display='none';
-  if(clientsSection) clientsSection.style.display='none';
+  // Hide everything first
+  if(billsList)      billsList.style.display      = 'none';
+  if(qiSection)      qiSection.style.display      = 'none';
+  if(searchBar)      searchBar.style.display      = 'none';
+  if(clientsSection) clientsSection.style.display = 'none';
 
-  if(f==='clients') {
-    if(clientsSection) clientsSection.style.display='block';
+  // Show the right section
+  if(f === 'clients') {
+    if(clientsSection) clientsSection.style.display = 'block';
     renderBillingClients('');
-  } else if(f==='quick') {
-    if(qiSection) qiSection.style.display='block';
+
+  } else if(f === 'quick') {
+    if(qiSection) qiSection.style.display = 'block';
     const t = today();
     const fromEl = document.getElementById('qi-from-date');
-    const toEl = document.getElementById('qi-to-date');
+    const toEl   = document.getElementById('qi-to-date');
     if(fromEl) fromEl.value = t;
-    if(toEl) toEl.value = t;
+    if(toEl)   toEl.value   = t;
     const srch = document.getElementById('qi-search');
     if(srch) srch.value = '';
     renderQuickInvoices();
+
   } else {
-    if(billsList) billsList.style.display='block';
-    if(searchBar) searchBar.style.display='block';
+    if(billsList)  billsList.style.display  = 'block';
+    if(searchBar)  searchBar.style.display  = 'block';
     renderBills();
   }
 }
